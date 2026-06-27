@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Usuario {
+  usuarioId        Int       @id @default(autoincrement()) @map("usuario_id")
+  primerNombre     String    @map("primer_nombre") @db.VarChar(50)
+  segundoNombre    String?   @map("segundo_nombre") @db.VarChar(50)
+  primerApellido   String    @map("primer_apellido") @db.VarChar(50)
+  segundoApellido  String?   @map("segundo_apellido") @db.VarChar(50)
+  email            String    @unique @db.VarChar(50)
+  contrasena       String    @db.VarChar(255)
+  activo           Boolean   @default(true)
+  fechaNacimiento  DateTime  @map("fecha_nacimiento") @db.Date
+  fechaCreacion    DateTime  @default(now()) @map("fecha_creacion")
+  fechaDesactivado DateTime? @map("fecha_desactivado")
+
+  proyectosCreados  Proyecto[]        @relation("CreadorProyecto")
+  proyectos         UsuarioProyecto[]
+
+  @@map("usuario")
+}
+
+model Proyecto {
+  proyectoId      Int       @id @default(autoincrement()) @map("proyecto_id")
+  nombreProyecto  String    @map("nombre_proyecto") @db.VarChar(100)
+  estadoProyecto  Boolean   @default(true) @map("estado_proyecto")
+  fechaInicio     DateTime  @map("fecha_inicio") @db.Date
+  fechaLimite     DateTime? @map("fecha_limite") @db.Date
+  usuarioCreadorId Int      @map("usuario_creadorid")
+
+  creador   Usuario          @relation("CreadorProyecto", fields: [usuarioCreadorId], references: [usuarioId])
+  miembros  UsuarioProyecto[]
+  secciones Seccion[]
+
+  @@map("proyecto")
+}
+
+model UsuarioProyecto {
+  usuarioColaboradorId Int      @map("usuario_colaboradorid")
+  proyectoId           Int      @map("proyecto_id")
+  fechaUnion           DateTime @default(now()) @map("fecha_union") @db.Date
+
+  usuario  Usuario  @relation(fields: [usuarioColaboradorId], references: [usuarioId])
+  proyecto Proyecto @relation(fields: [proyectoId], references: [proyectoId])
+
+  @@id([usuarioColaboradorId, proyectoId])
+  @@map("usuario_proyecto")
+}
+
+model Seccion {
+  seccionId          Int       @id @default(autoincrement()) @map("seccion_id")
+  nombreSeccion      String    @map("nombre_seccion") @db.VarChar(50)
+  color              String    @db.VarChar(20)
+  fechaCreacion      DateTime  @default(now()) @map("fecha_creacion")
+  fechaDesactivado   DateTime? @map("fecha_desactivado")
+  fechaActualizacion DateTime? @map("fecha_actualizacion")
+  activoSeccion      Boolean   @default(true) @map("activo_seccion")
+  proyectoId         Int       @map("proyecto_id")
+
+  proyecto Proyecto @relation(fields: [proyectoId], references: [proyectoId])
+  tareas   Tarea[]
+
+  @@map("seccion")
+}
+
+model Tarea {
+  tareaId          Int       @id @default(autoincrement()) @map("tarea_id")
+  nombreTarea      String    @map("nombre_tarea") @db.VarChar(150)
+  descripcionTarea String    @map("descripcion_tarea")
+  fechaInicio      DateTime  @map("fecha_inicio") @db.Date
+  fechaLimite      DateTime  @map("fecha_limite") @db.Date
+  fechaDesactivado DateTime? @map("fecha_desactivado")
+  activoTarea      Boolean   @default(true) @map("activo_tarea")
+  prioridad        Int
+
+  seccionId Int?    @map("seccion_id")
+  seccion   Seccion? @relation(fields: [seccionId], references: [seccionId])
+
+  contenidos Contenido[]
+  subtareas  Subtarea[]
+
+  @@map("tarea")
+}
+
+model TipoContenido {
+  tipoContenidoId      Int    @id @default(autoincrement()) @map("tipo_contenidoid")
+  nombreTipoContenido  String @map("nombre_tipo_contenido") @db.VarChar(50)
+
+  contenidos Contenido[]
+
+  @@map("tipo_contenido")
+}
+
+model Contenido {
+  contenidoId          Int       @id @default(autoincrement()) @map("contenido_id")
+  descripcionContenido String    @map("descripcion_contenido")
+  estadoContenido      Boolean   @default(true) @map("estado_contenido")
+  fechaCreacion        DateTime  @default(now()) @map("fecha_creacion")
+  fechaActualizacion   DateTime? @map("fecha_actualizacion")
+  fechaDesactivado     DateTime? @map("fecha_desactivado")
+
+  tareaId         Int @map("tarea_id")
+  tipoContenidoId Int @map("tipo_contenidoid")
+
+  tarea         Tarea         @relation(fields: [tareaId], references: [tareaId])
+  tipoContenido TipoContenido @relation(fields: [tipoContenidoId], references: [tipoContenidoId])
+
+  @@map("contenido")
+}
+
+model Subtarea {
+  subtareaId          Int       @id @default(autoincrement()) @map("subtarea_id")
+  descripcionSubtarea String    @map("descripcion_subtarea")
+  estadoSubtarea      Boolean   @default(false) @map("estado_subtarea")
+  fechaCreacion       DateTime  @default(now()) @map("fecha_creacion")
+  fechaActualizacion  DateTime? @map("fecha_actualizacion")
+
+  tareaId Int?  @map("tarea_id")
+  tarea   Tarea? @relation(fields: [tareaId], references: [tareaId])
+
+  @@map("subtarea")
+}

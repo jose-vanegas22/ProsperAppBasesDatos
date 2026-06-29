@@ -6,10 +6,13 @@ import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { PrismaModule } from './prisma/prisma.module';
 import { ProyectoModule } from './proyecto/proyecto.module';
+import { SeccionModule } from './seccion/seccion.module';
+import { TareaModule } from './tarea/tarea.module';
 import { UserModule } from './user/user.module';
+import { ContenidoModule } from './contenido/contenido.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthModule, ProyectoModule],
+  imports: [PrismaModule, UserModule, AuthModule, ProyectoModule, SeccionModule, TareaModule, ContenidoModule],
   controllers: [AppController],
   providers: [
     AppService,

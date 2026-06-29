@@ -10,10 +10,11 @@ import { SeccionModule } from './seccion/seccion.module';
 import { TareaModule } from './tarea/tarea.module';
 import { UserModule } from './user/user.module';
 import { ContenidoModule } from './contenido/contenido.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 import { SubtareaModule } from './subtarea/subtarea.module';
 
 @Module({
-  imports: [PrismaModule, UserModule, AuthModule, ProyectoModule, SeccionModule, TareaModule, ContenidoModule, SubtareaModule],
+  imports: [PrismaModule, UserModule, AuthModule, ProyectoModule, SeccionModule, TareaModule, ContenidoModule, SubtareaModule, DashboardModule],
   controllers: [AppController],
   providers: [
     AppService,

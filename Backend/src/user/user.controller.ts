@@ -8,16 +8,24 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Public } from '../auth/decorators/public.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 
+@ApiBearerAuth()
 @ApiTags('Usuarios')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Get('me')
+  @ApiOperation({ summary: 'Obtener perfil del usuario autenticado' })
+  getMe(@CurrentUser() user: { usuarioId: number }) {
+    return this.userService.findOne(user.usuarioId);
+  }
 
   @Public()
   @Post()

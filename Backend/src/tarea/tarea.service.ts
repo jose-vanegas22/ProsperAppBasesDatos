@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -92,6 +93,16 @@ export class TareaService {
     const tarea = await this.obtenerTarea(tareaId);
     if (tarea.seccionId) await this.verificarAccesoSeccion(tarea.seccionId, usuarioId);
     await this.verificarAccesoSeccion(seccionDestinoId, usuarioId);
+
+    const subtareasPendientes = await this.prisma.subtarea.count({
+      where: { tareaId, estadoSubtarea: false },
+    });
+
+    if (subtareasPendientes > 0) {
+      throw new BadRequestException(
+        `La tarea tiene ${subtareasPendientes} subtarea(s) pendiente(s). Completa todas antes de moverla`,
+      );
+    }
 
     return this.prisma.tarea.update({
       where: { tareaId },

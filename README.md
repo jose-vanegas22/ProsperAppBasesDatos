@@ -75,7 +75,7 @@ cp .env.example .env
 `Backend/.env` debe quedar así (coincide con los datos del `docker-compose.yml`):
 
 ```env
-DATABASE_URL="postgresql://prosperapp_user:prosperapp_pass@localhost:5432/prosperapp?schema=public"
+DATABASE_URL="postgresql://USUARIO:CONTRASENA@localhost:5432/prosperapp?schema=public"
 
 JWT_SECRET="cambia_esto_por_un_secreto_seguro"
 JWT_EXPIRATION="8h"

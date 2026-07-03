@@ -24,7 +24,7 @@ Antes de empezar asegúrate de tener instalado:
 ## 1. Clonar el repositorio
 
 ```bash
-git clone <url-del-repositorio>
+git clone https://github.com/jose-vanegas22/ProsperAppBasesDatos
 cd ProsperAPP
 ```
 

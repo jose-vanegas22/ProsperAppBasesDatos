@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 
 import DashboardPage from '../pages/DashboardPage';
 import ProyectosPage from '../pages/proyectos/ProyectosPage';
+import PerfilPage from '../pages/perfil/PerfilPage';
 
 const Tab = createBottomTabNavigator();
 
@@ -39,6 +40,11 @@ export default function MainLayout() {
         name="Proyectos"
         component={ProyectosPage}
         options={{ title: 'Proyectos' }}
+      />
+      <Tab.Screen
+        name="Perfil"
+        component={PerfilPage}
+        options={{ title: 'Perfil' }}
       />
     </Tab.Navigator>
   );

@@ -136,9 +136,9 @@ EXPO_PUBLIC_API_URL=http://TU_IP_LOCAL:3000/api
 - Windows: `ipconfig` → busca "Dirección IPv4" de tu adaptador Wi-Fi
 - Mac/Linux: `ifconfig` o `ip a` → busca la IP de tu interfaz de red (empieza normalmente por `192.168.` o `10.`)
 
-> ⚠️ Tu celular y tu computador deben estar conectados a la **misma red Wi-Fi** para que la app pueda comunicarse con el backend.
+> Tu celular y tu computador deben estar conectados a la **misma red Wi-Fi** para que la app pueda comunicarse con el backend.
 >
-> ⚠️ Cada integrante del equipo tiene su propia IP y por lo tanto su propio `Frontend/.env` — este archivo **no se sube a git**, así que no genera conflictos entre compañeros.
+> Cada integrante del equipo tiene su propia IP y por lo tanto su propio `Frontend/.env` — este archivo **no se sube a git**, así que no genera conflictos entre compañeros.
 
 ### 4.2 Levantar la app
 

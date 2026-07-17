@@ -82,6 +82,12 @@ export class UserService {
     });
   }
 
+  findByEmail(email: string) {
+    return this.prisma.usuario.findUnique({
+      where: { email },
+    });
+  }
+
   private camposPublicos() {
     return {
       usuarioId: true,

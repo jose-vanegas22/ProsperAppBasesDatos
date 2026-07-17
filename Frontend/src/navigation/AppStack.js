@@ -1,7 +1,7 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-// Tus nuevas pantallas de la Persona B
+// CORRECCIÓN 1: Ajustamos la ruta para que entre a la carpeta 'project'
+import CreateProjectScreen from '../screens/project/CreateProjectScreen';
 import DashboardScreen from '../screens/dashboard/DashboardScreen';
 import ProjectBoardScreen from '../screens/project/ProjectBoardScreen';
 import TaskDetailScreen from '../screens/task/TaskDetailScreen';
@@ -25,6 +25,13 @@ export default function AppStack() {
         name="TaskDetail"
         component={TaskDetailScreen}
         options={{ title: 'Detalles de Tarea' }}
+      />
+      
+      {/* CORRECCIÓN 2: Registramos la pantalla para que el Dashboard pueda navegar a ella */}
+      <Stack.Screen
+        name="CreateProject"
+        component={CreateProjectScreen}
+        options={{ title: 'Crear Nuevo Proyecto' }}
       />
     </Stack.Navigator>
   );

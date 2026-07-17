@@ -55,10 +55,22 @@ export default function DashboardScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      {/* Cabecera de Bienvenida y Logout */}
       <View style={styles.header}>
-        <Text style={styles.welcome}>Hola, {user?.primerNombre} 👋</Text>
-        <Button title="Cerrar sesión" onPress={logout} color="#EF4444" />
+        <View>
+          <Text style={styles.welcome}>Hola, {user?.primerNombre} 👋</Text>
+          <Text style={styles.subWelcome}>Gestor de proyectos</Text>
+        </View>
+        <Button title="Salir" onPress={logout} color="#EF4444" />
       </View>
+
+      {/* ¡Botonera de Acción! Agregamos el botón aquí con estilo personalizado */}
+      <TouchableOpacity 
+        style={styles.createButton} 
+        onPress={() => navigation.navigate('CreateProject')}
+      >
+        <Text style={styles.createButtonText}>+ Nuevo Proyecto</Text>
+      </TouchableOpacity>
 
       <Text style={styles.sectionTitle}>Mis Proyectos</Text>
       
@@ -77,9 +89,26 @@ export default function DashboardScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F9FAFB', padding: 20 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
   welcome: { fontSize: 22, fontWeight: '700', color: '#111827' },
+  subWelcome: { fontSize: 14, color: '#6B7280', marginTop: 2 },
   sectionTitle: { fontSize: 18, fontWeight: '600', color: '#374151', marginBottom: 16 },
+  
+  // Estilos del nuevo botón de creación
+  createButton: { 
+    backgroundColor: '#4F46E5', 
+    paddingVertical: 14, 
+    borderRadius: 12, 
+    alignItems: 'center', 
+    marginBottom: 24,
+    elevation: 3, // Sombra para Android
+    shadowColor: '#4F46E5', // Sombra para iOS
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5
+  },
+  createButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
+
   list: { paddingBottom: 20 },
   card: { backgroundColor: '#FFFFFF', padding: 16, borderRadius: 12, marginBottom: 12, elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.1, shadowRadius: 2 },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Switch, Alert, ActivityIndicator } from 'react-native';
 import * as taskApi from '../../api/tasks.api';
+import client from '../../api/client';
 import { useAuth } from '../../context/AuthContext';
+
 
 export default function TaskDetailScreen({ route }) {
   const { tareaId } = route.params;

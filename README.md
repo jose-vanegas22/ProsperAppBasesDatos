@@ -1,179 +1,314 @@
-# ProsperApp
+ #  ProsperApp
 
-Aplicación de gestión de proyectos y tareas. El repositorio está dividido en dos partes independientes:
 
-- **Backend** — API REST hecha con [NestJS](https://nestjs.com/) + [Prisma](https://www.prisma.io/) sobre PostgreSQL.
-- **Frontend** — App móvil hecha con [Expo](https://expo.dev/) / React Native.
+> Herramienta inteligente de gestión de proyectos y tareas orientada a trabajadores independientes y pequeños equipos de colaboración.
 
-```
+
+[![NestJS](https://img.shields.io/badge/Backend-NestJS-E0234E?style=flat-square&logo=nestjs)](https://nestjs.com/)
+
+[![Prisma](https://img.shields.io/badge/ORM-Prisma-2D3748?style=flat-square&logo=prisma)](https://www.prisma.io/)
+
+[![PostgreSQL](https://img.shields.io/badge/DB-PostgreSQL-4169E1?style=flat-square&logo=postgresql)](https://www.postgresql.org/)
+
+[![Expo](https://img.shields.io/badge/Frontend-Expo-000020?style=flat-square&logo=expo)](https://expo.dev/)
+
+[![React Native](https://img.shields.io/badge/Mobile-React_Native-61DAFB?style=flat-square&logo=react)](https://reactnative.dev/)
+
+
+El repositorio se encuentra estructurado y desacoplado en dos componentes independientes que se comunican de forma cliente-servidor:
+
+
+*   **Backend** — API REST empresarial construida sobre NestJS y Prisma ORM.
+
+*   **Frontend** — Aplicación móvil multiplataforma desarrollada en Expo / React Native.
+
+
+```hlsl
+
 ProsperAPP/
-├── Backend/     # API REST (NestJS + Prisma)
-├── Frontend/    # App móvil (Expo / React Native)
-└── docker-compose.yml   # Base de datos PostgreSQL
+
+├── Backend/             # API REST (NestJS + Prisma)
+
+├── Frontend/            # App móvil (Expo / React Native)
+
+└── docker-compose.yml   # Contenedor de base de datos PostgreSQL
+
 ```
 
-## Requisitos previos
 
-Antes de empezar asegúrate de tener instalado:
+---
 
-- [Node.js](https://nodejs.org/) 18 o superior
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (para la base de datos)
-- [Git](https://git-scm.com/)
-- La app [Expo Go](https://expo.dev/go) instalada en tu celular (Android o iOS), para probar el frontend
 
-## 1. Clonar el repositorio
+##  Requisitos Previos
+
+
+Antes de iniciar con el despliegue, asegúrate de contar con las siguientes herramientas instaladas en tu equipo:
+
+
+*   [Node.js](https://nodejs.org/) (Versión 18 o superior)
+
+*   [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Necesario para orquestar la base de datos)
+
+*   [Git](https://git-scm.com/) (Control de versiones)
+
+*   La aplicación móvil [Expo Go](https://expo.dev/go) instalada en tu dispositivo físico (Android o iOS) para la previsualización del frontend.
+
+
+---
+
+
+##  Guía de Instalación y Despliegue
+
+
+Sigue atentamente los pasos descritos a continuación para levantar el entorno de desarrollo local.
+
+
+### 1️1.  Clonar el repositorio
+
+Abre tu terminal, clona el proyecto y accede al directorio raíz de la aplicación:
 
 ```bash
-git clone https://github.com/jose-vanegas22/ProsperAppBasesDatos
+
+git clone [https://github.com/jose-vanegas22/ProsperAppBasesDatos](https://github.com/jose-vanegas22/ProsperAppBasesDatos)
+
 cd ProsperAPP
+
 ```
 
-## 2. Levantar la base de datos con Docker
 
-En la raíz del proyecto:
+### 2️2.  Inicializar la Base de Datos con Docker
+
+Desde la raíz del proyecto, ejecuta el siguiente comando en segundo plano:
 
 ```bash
+
 docker compose up -d
+
 ```
 
-Esto levanta un contenedor de PostgreSQL con los siguientes datos (definidos en `docker-compose.yml`):
+Esto inicializará una instancia dedicada de **PostgreSQL** utilizando las credenciales preconfiguradas en el archivo `docker-compose.yml`:
 
-| Variable | Valor |
-|---|---|
-| Usuario | `prosperapp_user` |
-| Contraseña | `prosperapp_pass` |
-| Base de datos | `prosperapp` |
-| Puerto | `5432` |
 
-Para verificar que quedó corriendo:
+| Parámetro | Valor Predeterminado |
+
+| :--- | :--- |
+
+| **Usuario** | `prosperapp_user` |
+
+| **Contraseña** | `prosperapp_pass` |
+
+| **Base de Datos** | `prosperapp` |
+
+| **Puerto Local** | `5432` |
+
+
+>  **Comandos útiles de diagnóstico:**
+
+> *   Para verificar si el contenedor está corriendo correctamente usa: `docker ps`
+
+> *   Para detener por completo el contenedor de la base de datos utiliza: `docker compose down`
+
+
+### 3️3.  Configurar y Ejecutar el Backend
+
+Desplázate al directorio del servidor e instala todos los paquetes necesarios de Node:
 
 ```bash
-docker ps
-```
 
-Para detenerla más adelante:
-
-```bash
-docker compose down
-```
-
-## 3. Configurar y ejecutar el Backend
-
-```bash
 cd Backend
+
 npm install
+
 ```
 
-### 3.1 Variables de entorno
 
-Copia el archivo de ejemplo y ajusta los valores:
+#### ⚙️ Configuración de Variables de Entorno
+
+Genera tu archivo de configuración local a partir de la plantilla de ejemplo:
 
 ```bash
+
 cp .env.example .env
+
 ```
 
-`Backend/.env` debe quedar así (coincide con los datos del `docker-compose.yml`):
+Abre el archivo `Backend/.env` recién creado y asegúrate de que contenga los valores correspondientes para conectarse al contenedor Docker:
 
 ```env
+
 DATABASE_URL="postgresql://USUARIO:CONTRASENA@localhost:5432/prosperapp?schema=public"
 
+
 JWT_SECRET="cambia_esto_por_un_secreto_seguro"
+
 JWT_EXPIRATION="8h"
 
+
 PORT=3000
+
 ```
+
 
 | Variable | Descripción |
-|---|---|
-| `DATABASE_URL` | Cadena de conexión a PostgreSQL. Debe apuntar al contenedor de Docker levantado en el paso 2 |
-| `JWT_SECRET` | Secreto usado para firmar los tokens de autenticación. Usa cualquier cadena larga y aleatoria |
-| `JWT_EXPIRATION` | Tiempo de expiración del token (ej. `8h`, `1d`) |
-| `PORT` | Puerto en el que corre la API |
 
-### 3.2 Migraciones y datos de prueba
+| :--- | :--- |
+
+| `DATABASE_URL` | String de conexión a PostgreSQL. Debe apuntar al contenedor de Docker levantado en el paso 2. |
+
+| `JWT_SECRET` | Clave secreta para la firma segura de tokens de sesión. Usa una cadena alfanumérica larga. |
+
+| `JWT_EXPIRATION` | Periodo de vigencia de la sesión del usuario (ej. `8h`, `1d`). |
+
+| `PORT` | Puerto de escucha en el que se levantará el servidor HTTP local. |
+
+
+####  Sincronización de Base de Datos y Datos de Prueba
+
+Aplica las migraciones estructurales, genera el cliente de datos y ejecuta los scripts de poblado inicial (*seeds*):
 
 ```bash
+
 npx prisma migrate dev
+
 ```
 
-Esto aplica las migraciones a la base de datos, genera el cliente de Prisma y ejecuta el seed automáticamente (`prisma/seed.ts`) para poblar datos de prueba.
+>  **Nota:** Este comando estructurará el esquema relacional en PostgreSQL y cargará de forma automática los registros de prueba simulados definidos en `prisma/seed.ts`.
 
-### 3.3 Levantar el servidor
+
+####  Iniciar Servidor en Modo Desarrollo
 
 ```bash
+
 npm run start:dev
-```
-
-La API queda disponible en `http://localhost:3000/api` y la documentación Swagger en:
 
 ```
+
+La API REST quedará totalmente funcional en el endpoint `http://localhost:3000/api`. Puedes validar y probar sus rutas desde la documentación interactiva de Swagger integrada en:
+
+```text
+
 http://localhost:3000/api/docs
+
 ```
 
-## 4. Configurar y ejecutar el Frontend
+
+### 4️4.  Configurar y Ejecutar el Frontend
+
+Abre una nueva terminal en paralelo, navega a la carpeta de la interfaz móvil e instala las dependencias:
 
 ```bash
+
 cd Frontend
+
 npm install
+
 ```
 
-### 4.1 Variables de entorno
 
-Copia el archivo de ejemplo:
+####  Configuración de Variables de Entorno
+
+Clona la plantilla de entorno del cliente:
 
 ```bash
+
 cp .env.example .env
+
 ```
 
-Y coloca la **IP local de tu computador** (no `localhost`, porque el celular no la reconoce como su propia máquina):
+Edita el archivo `Frontend/.env` asignando la **dirección IP local de tu ordenador** en lugar de usar `localhost` (los dispositivos móviles externos o emuladores no identifican `localhost` como tu PC):
 
 ```env
+
 EXPO_PUBLIC_API_URL=http://TU_IP_LOCAL:3000/api
+
 ```
 
-**¿Cómo saber tu IP local?**
 
-- Windows: `ipconfig` → busca "Dirección IPv4" de tu adaptador Wi-Fi
-- Mac/Linux: `ifconfig` o `ip a` → busca la IP de tu interfaz de red (empieza normalmente por `192.168.` o `10.`)
+ **¿Cómo consultar tu IP local de red?**
 
-> Tu celular y tu computador deben estar conectados a la **misma red Wi-Fi** para que la app pueda comunicarse con el backend.
->
-> Cada integrante del equipo tiene su propia IP y por lo tanto su propio `Frontend/.env` — este archivo **no se sube a git**, así que no genera conflictos entre compañeros.
+*   **Windows:** Ejecuta `ipconfig` en la consola y localiza la *Dirección IPv4* de tu adaptador Wi-Fi activo.
 
-### 4.2 Levantar la app
+*   **Mac / Linux:** Ejecuta `ifconfig` o `ip a` en la terminal y busca la dirección IP de tu interfaz inalámbrica (usualmente inicia con `192.168.` o `10.`).
+
+
+> **Restricción de Red:** Tu celular físico y tu PC deben estar conectados obligatoriamente a la **misma red Wi-Fi** para que exista comunicación con el backend.
+
+> 
+
+>  **Privacidad:** La IP de red cambia por desarrollador. Este archivo `.env` está protegido e ignorado en Git mediante `.gitignore` para prevenir colisiones de código entre compañeros de equipo.
+
+
+####  Iniciar la Aplicación Móvil
+
+Lanza el empaquetador de Expo para compilar el proyecto:
 
 ```bash
+
 npm start
+
 ```
 
-Esto abre Expo con un código QR:
+Se mostrará un código QR en tu terminal. Elige el entorno de visualización de tu preferencia:
 
-- **Celular físico:** escanea el QR con la app **Expo Go**
-- **Emulador Android:** presiona `a` en la terminal (requiere Android Studio configurado)
-- **Simulador iOS:** presiona `i` en la terminal (solo en Mac)
+*   **Dispositivo Físico:** Escanea el código directamente usando la app móvil **Expo Go** (Android) o la cámara nativa (iOS).
 
-## Resumen rápido
+*   **Emulador Android:** Presiona la tecla `a` en la consola (Requiere Android Studio configurado con una máquina virtual).
+
+*   **Simulador iOS:** Presiona la tecla `i` en la consola (Disponible exclusivamente en ordenadores macOS).
+
+
+---
+
+
+##  Resumen Rápido de Comandos
+
+
+Si los archivos de configuración ya están creados, inicializa el entorno completo ejecutando este set rápido:
+
 
 ```bash
-# 1. Base de datos
+
+# 1. Levantar contenedor de base de datos
+
 docker compose up -d
 
-# 2. Backend
+
+# 2. Inicializar el Backend (Terminal 1)
+
 cd Backend
-cp .env.example .env    # ajustar valores si es necesario
+
+cp .env.example .env     # Ajustar valores si es la primera vez
+
 npm install
+
 npx prisma migrate dev
+
 npm run start:dev
 
-# 3. Frontend (en otra terminal)
+
+# 3. Inicializar el Frontend (Terminal 2)
+
 cd Frontend
-cp .env.example .env    # colocar tu IP local
+
+cp .env.example .env     # Colocar tu IP local actual
+
 npm install
+
 npm start
+
 ```
 
-## Notas
 
-- El backend debe estar corriendo **antes** de abrir el frontend, ya que la app consume la API en tiempo real.
-- Si cambias de red Wi-Fi, recuerda actualizar `EXPO_PUBLIC_API_URL` en tu `Frontend/.env` con la nueva IP.
-- Nunca subas tus archivos `.env` a git — ya están ignorados en `.gitignore`, pero ten cuidado si creas archivos nuevos con credenciales.
+---
+
+
+##  Notas Importantes
+
+
+*   **Orden de Ejecución:** El servidor Backend debe encontrarse arriba y escuchando conexiones **antes** de inicializar el Frontend para evitar errores de red y sincronización en la pantalla de autenticación.
+
+*   **Cambios de Locación:** Si trabajas desde otra ubicación física u otra red Wi-Fi, tu IP local cambiará. No olvides actualizar la variable `EXPO_PUBLIC_API_URL` en tu archivo `Frontend/.env`.
+
+*   **Seguridad de Credenciales:** Protege siempre tus contraseñas y llaves de cifrado. Jamás subas archivos de extensión `.env` al histórico de Git. Las plantillas `.env.example` proveen la estructura modelo requerida.
+
+``` 

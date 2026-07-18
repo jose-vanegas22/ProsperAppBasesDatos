@@ -1,5 +1,9 @@
 # ProsperApp
 
+> Herramienta de gestión de proyectos y tareas orientada a desarrolladores independientes y equipos pequeños.
+
+[![NestJS](https://img.shields.io/badge/Backend-NestJS-E0234E?style=flat-square&logo=nestjs)](https://nestjs.com/) [![Prisma](https://img.shields.io/badge/ORM-Prisma-2D3748?style=flat-square&logo=prisma)](https://www.prisma.io/) [![PostgreSQL](https://img.shields.io/badge/DB-PostgreSQL-4169E1?style=flat-square&logo=postgresql)](https://www.postgresql.org/) [![Expo](https://img.shields.io/badge/Frontend-Expo-000020?style=flat-square&logo=expo)](https://expo.dev/) [![React Native](https://img.shields.io/badge/Mobile-React_Native-61DAFB?style=flat-square&logo=react)](https://reactnative.dev/)
+
 Aplicación de gestión de proyectos y tareas. El repositorio está dividido en dos partes independientes:
 
 - **Backend** — API REST hecha con [NestJS](https://nestjs.com/) + [Prisma](https://www.prisma.io/) sobre PostgreSQL.
@@ -187,6 +191,6 @@ npm start
 
 ## Notas
 
-- El backend debe estar corriendo **antes** de abrir el frontend, ya que la app consume la API en tiempo real.
-- Si cambias de red Wi-Fi, recuerda actualizar `EXPO_PUBLIC_API_URL` en tu `Frontend/.env` con la nueva IP.
-- Nunca subas tus archivos `.env` a git — ya están ignorados en `.gitignore`, pero ten cuidado si creas archivos nuevos con credenciales.
+- **Orden de ejecución:** el backend debe estar corriendo **antes** de abrir el frontend, ya que la app consume la API en tiempo real.
+- **Cambios de red:** si cambias de red Wi-Fi, recuerda actualizar `EXPO_PUBLIC_API_URL` en tu `Frontend/.env` con la nueva IP.
+- **Seguridad de credenciales:** nunca subas tus archivos `.env` a git — ya están ignorados en `.gitignore`, pero ten cuidado si creas archivos nuevos con credenciales.

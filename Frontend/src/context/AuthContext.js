@@ -1,58 +1,53 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as authApi from '../api/auth.api';
+import { login as loginService } from '../services/auth.service';
+import { registrar } from '../services/usuario.service';
 
-const AuthContext = createContext(undefined);
-const TOKEN_KEY = '@prosperapp:token';
-const USER_KEY = '@prosperapp:user';
+const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [usuario, setUsuario] = useState(null);
+  const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
-    loadStoredAuth();
+    const cargarSesion = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        const datos = await AsyncStorage.getItem('usuario');
+        if (token && datos) {
+          setUsuario(JSON.parse(datos));
+        }
+      } catch (_) {
+      } finally {
+        setCargando(false);
+      }
+    };
+    cargarSesion();
   }, []);
 
-  async function loadStoredAuth() {
-    try {
-      const storedToken = await AsyncStorage.getItem(TOKEN_KEY);
-      const storedUser = await AsyncStorage.getItem(USER_KEY);
-      if (storedToken && storedUser) {
-        setUser(JSON.parse(storedUser));
-      }
-    } catch (e) {
-      console.warn('Error cargando sesión guardada', e);
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  const login = async (email, contrasena) => {
+    const { data } = await loginService(email, contrasena);
+    await AsyncStorage.setItem('token', data.access_token);
+    await AsyncStorage.setItem('usuario', JSON.stringify(data.usuario));
+    setUsuario(data.usuario);
+  };
 
-  async function login(email, password) {
-    const { access_token, usuario } = await authApi.login(email, password);
-    await AsyncStorage.setItem(TOKEN_KEY, access_token);
-    await AsyncStorage.setItem(USER_KEY, JSON.stringify(usuario));
-    setUser(usuario);
-  }
+  const registro = async (datos) => {
+    await registrar(datos);
+    await login(datos.email, datos.contrasena);
+  };
 
-  async function register(datosUsuario) {
-    return authApi.register(datosUsuario);
-  }
+  const cerrarSesion = async () => {
+    await AsyncStorage.removeItem('token');
+    await AsyncStorage.removeItem('usuario');
+    setUsuario(null);
+  };
 
-  async function logout() {
-    await AsyncStorage.multiRemove([TOKEN_KEY, USER_KEY]);
-    setUser(null);
-  }
-
-  const value = { user, isLoading, isAuthenticated: !!user, login, register, logout };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ usuario, cargando, login, registro, cerrarSesion }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth debe usarse dentro de un AuthProvider');
-  }
-  return context;
-}
+export const useAuth = () => useContext(AuthContext);

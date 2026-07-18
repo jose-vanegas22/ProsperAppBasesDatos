@@ -152,6 +152,19 @@ Esto abre Expo con un código QR:
 - **Emulador Android:** presiona `a` en la terminal (requiere Android Studio configurado)
 - **Simulador iOS:** presiona `i` en la terminal (solo en Mac)
 
+## Usuarios de prueba
+
+La base de datos se pobla automáticamente con el seed (`Backend/prisma/seed.ts`), así que puedes iniciar sesión directamente con cualquiera de estos usuarios sin necesidad de registrarte:
+
+| Email | Contraseña | Proyectos |
+|---|---|---|
+| `juan.perez@email.com` | `juanperez` | Creador de "ProsperApp Tracker", colaborador en "App de Recetas" |
+| `maria.gomez@email.com` | `mariagomez` | Creadora de "App de Recetas", colaboradora en "ProsperApp Tracker" |
+| `pedro.ramirez@email.com` | `pedroramirez` | Creador de "Bot de Notificaciones" |
+| `laura.castro@email.com` | `lauracastro` | Colaboradora en "App de Recetas" y "Bot de Notificaciones" |
+
+> El usuario `andres.lopez@email.com` también existe en el seed pero está marcado como **inactivo**, así que no podrá iniciar sesión (sirve para probar ese caso).
+
 ## Resumen rápido
 
 ```bash
